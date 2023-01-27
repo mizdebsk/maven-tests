@@ -40,6 +40,15 @@ rlJournalStart
     rlAssertGrep "<name>Central Repository</name>" $rlRun_LOG
   rlPhaseEnd
 
+  rlPhaseStartTest "download remote artifact"
+    rlRun "rm -rf $HOME/.m2/repository/junit/junit/4.12/"
+    rlAssertNotExists $HOME/.m2/repository/junit/junit/4.12/junit-4.12.jar
+    rlRun -s "mvn -B dependency:get -Dartifact=junit:junit:4.12"
+    rlAssertGrep "BUILD SUCCESS" $rlRun_LOG
+    rlAssertGrep "Resolving junit:junit:jar:4.12 with transitive dependencies" $rlRun_LOG
+    rlAssertExists $HOME/.m2/repository/junit/junit/4.12/junit-4.12.jar
+  rlPhaseEnd
+
 rlJournalEnd
 
 rlJournalPrintText
