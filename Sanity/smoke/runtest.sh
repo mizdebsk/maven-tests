@@ -29,13 +29,13 @@ rlJournalStart
   rlPhaseEnd
 
   rlPhaseStartTest "display compiler help"
-    rlRun -s "mvn compiler:help"
+    rlRun -s "mvn -B compiler:help"
     rlAssertGrep "BUILD SUCCESS" $rlRun_LOG
     rlAssertGrep "compiler:testCompile" $rlRun_LOG
   rlPhaseEnd
 
   rlPhaseStartTest "display effective POM"
-    rlRun -s "mvn -f simple.pom help:effective-pom"
+    rlRun -s "mvn -B -f simple.pom help:effective-pom"
     rlAssertGrep "BUILD SUCCESS" $rlRun_LOG
     rlAssertGrep "<name>Central Repository</name>" $rlRun_LOG
   rlPhaseEnd
