@@ -1,0 +1,3 @@
+summary: Maven OpenJDK packages test
+description: |
+  Test whether expected OpenJDK packages are installed.
