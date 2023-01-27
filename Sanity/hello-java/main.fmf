@@ -1,0 +1,4 @@
+summary: Maven simple Java project test
+description: |
+  Test whether Maven is able of building a simple Java project.
+tag: java-compiler
