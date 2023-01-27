@@ -1,0 +1,3 @@
+summary: Maven JAVA_HOME override test
+description: |
+  Test whether Maven respects JAVA_HOME set by user.
