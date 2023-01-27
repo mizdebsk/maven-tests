@@ -2,27 +2,34 @@
 # Author: Mikolaj Izdebski <mizdebsk@redhat.com>
 . /usr/share/beakerlib/beakerlib.sh
 
-rlJournalStart
-rlPhaseStartTest
-
 n=${OPENJDK_VERSION:=17}
 
-# Headless JRE of correct version must always be installed
-rlAssertRpm "java-${n}-openjdk-headless"
+rlJournalStart
 
-# JDK packages must or must not be installed, depending on test scenario
-if [ -z "${OPENJDK_HEADLESS}" ]; then
-    rlAssertRpm "java-${n}-openjdk"
-    rlAssertRpm "java-${n}-openjdk-devel"
-else
-    rlAssertNotRpm "java-${n}-openjdk"
-    rlAssertNotRpm "java-${n}-openjdk-devel"
-fi
+  rlPhaseStartTest "Check for presence of headless Java $n JRE"
+    rlAssertRpm "java-${n}-openjdk-headless"
+  rlPhaseEnd
 
-# Other JVM packages must not be installed
-rlRun -s "rpm -qa | grep ^java- | grep -v ^java-${n}-openjdk- | sort"
-rlAssertNotGrep . $rlRun_LOG
+  if [ -z "${OPENJDK_HEADLESS}" ]; then
 
-rlPhaseEnd
+    rlPhaseStartTest "Check for presence of Java $n JDK"
+      rlAssertRpm "java-${n}-openjdk"
+      rlAssertRpm "java-${n}-openjdk-devel"
+    rlPhaseEnd
+
+  else
+
+    rlPhaseStartTest "Check for absence of Java $n JDK"
+      rlAssertNotRpm "java-${n}-openjdk"
+      rlAssertNotRpm "java-${n}-openjdk-devel"
+    rlPhaseEnd
+
+  fi
+
+  rlPhaseStartTest "Check for absence of JVMs other than OpenJDK $n"
+    rlRun -s "rpm -qa | grep ^java- | grep -v ^java-${n}-openjdk- | sort"
+    rlAssertNotGrep . $rlRun_LOG
+  rlPhaseEnd
+
 rlJournalEnd
 rlJournalPrintText
